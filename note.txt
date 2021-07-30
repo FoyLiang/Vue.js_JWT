@@ -1,0 +1,4 @@
+1. npm install -g @vue/cli
+2. Bootstrap v4.6
+3. npm i vue-router --save
+4. npm i axios --save
