@@ -1,3 +1,4 @@
+from re import split
 import flask
 import mysql.connector
 from flask import request, jsonify
@@ -6,6 +7,7 @@ from flask_cors import CORS
 import json
 import ast
 import jwt
+import time
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -51,7 +53,8 @@ def database_login(recive_data):
 	else:
 		tuple_data = results[0]
 		nid, first, last, pasw, mail = tuple_data
-		str_payload = "{\"ID\": \""+str(nid)+"\",\"first_name\": \""+str(first)+"\",\"last_name\": \""+str(last)+"\",\"password\": \""+str(pasw)+"\",\"email\": \""+str(mail)+"\"}"
+		timeexp = int(time.time())+30
+		str_payload = "{\"ID\": \""+str(nid)+"\",\"first_name\": \""+str(first)+"\",\"last_name\": \""+str(last)+"\",\"email\": \""+str(mail)+"\",\"exp\":\""+str(timeexp)+"\"}"
 		json_payload = json.loads(str_payload)	
 		encoded_jwt = jwt.encode(json_payload, "secret", algorithm="HS256")
 		
@@ -83,9 +86,14 @@ def register():
 
 @app.route('/user', methods=['GET'])
 def user():
-	print(request.json)
-
-	return "test"
+	str_token = request.headers.get('Authorization')
+	l_token = str_token.split(' ')
+	token = l_token[1]
+	if token == 'null':
+		return { "message": "Error", "data": "No Data" }, 401
+	else:
+		de_jwt = jwt.decode(token, "secret", algorithms="HS256")
+		return de_jwt
 
 if __name__ == '__main__':
     app.run()
