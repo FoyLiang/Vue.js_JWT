@@ -57,6 +57,7 @@
                 });
 
                 console.log(response);
+                this.$router.push('/login');
             }
         }
     }
