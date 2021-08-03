@@ -1,14 +1,19 @@
 <template>
     <nav class="navbar navbar-expand navbar-light fixed-top">
         <div class="container">
-            <a href="/" class="navbar-brand">Home</a>
+            <router-link to="/" class="navbar-brand">Home</router-link>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ml-auto" v-if="!user">
                     <li class="nav-item">
-                        <a href="./login" class="nav-link">Login</a>
+                        <router-link to="./login" class="nav-link">Login</router-link>
                     </li>
                     <li class="nav-item">
-                        <a href="./register" class="nav-link">Sing up</a>
+                        <router-link to="./register" class="nav-link">Sing up</router-link>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto" v-if="user">
+                    <li>
+                        <a href="javascript:void(0)" @click="handleClick" class="nav-link">logout</a>
                     </li>
                 </ul>
             </div>
@@ -18,6 +23,13 @@
 
 <script>
     export default {
-        name: 'Nav'
+        name: 'Nav',
+        props: ['user'],
+        methods: {
+            handleClick(){
+                localStorage.removeItem('token');
+                this.$router.push('/');
+            }
+        }
     }
 </script>

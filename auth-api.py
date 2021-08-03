@@ -53,7 +53,7 @@ def database_login(recive_data):
 	else:
 		tuple_data = results[0]
 		nid, first, last, pasw, mail = tuple_data
-		timeexp = int(time.time())+45
+		timeexp = int(time.time())+300
 		str_payload = "{\"ID\": \""+str(nid)+"\",\"first_name\": \""+str(first)+"\",\"last_name\": \""+str(last)+"\",\"email\": \""+str(mail)+"\",\"exp\":\""+str(timeexp)+"\"}"
 		json_payload = json.loads(str_payload)	
 		encoded_jwt = jwt.encode(json_payload, "secret", algorithm="HS256")
@@ -93,7 +93,10 @@ def user():
 		return { "message": "Error", "data": "No Data" }, 401
 	else:
 		de_jwt = jwt.decode(token, "secret", algorithms="HS256")
-		return de_jwt
+		str_data = str(de_jwt)
+		data = str_data.replace("'", '"')
+		jason_data = json.loads(data)	
+		return jason_data
 
 if __name__ == '__main__':
     app.run()
